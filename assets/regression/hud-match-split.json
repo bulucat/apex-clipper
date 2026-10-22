@@ -1,0 +1,142 @@
+{
+  "description": "Real-recording regression: one visible game session was split across worker labels. Two separately observed knockdown banners at 774 and 778.5 seconds were omitted.",
+  "minute_times": [
+    720,
+    780
+  ],
+  "readings": [
+    {
+      "time": 720,
+      "state": "valid",
+      "match_id": "match-720-1020",
+      "own_view": true,
+      "kills": 1,
+      "assists": 0,
+      "participation": 1,
+      "damage": 417,
+      "reviewer": "recorded visual readings"
+    },
+    {
+      "time": 726,
+      "state": "valid",
+      "match_id": "match-420-1020",
+      "own_view": true,
+      "kills": 1,
+      "assists": 0,
+      "participation": 1,
+      "damage": 417,
+      "reviewer": "recorded visual readings"
+    },
+    {
+      "time": 732,
+      "state": "valid",
+      "match_id": "match-420-1020",
+      "own_view": true,
+      "kills": 1,
+      "assists": 0,
+      "participation": 1,
+      "damage": 417,
+      "reviewer": "recorded visual readings"
+    },
+    {
+      "time": 738,
+      "state": "valid",
+      "match_id": "match-420-1020",
+      "own_view": true,
+      "kills": 1,
+      "assists": 0,
+      "participation": 1,
+      "damage": 417,
+      "reviewer": "recorded visual readings"
+    },
+    {
+      "time": 744,
+      "state": "valid",
+      "match_id": "match-420-1020",
+      "own_view": true,
+      "kills": 1,
+      "assists": 0,
+      "participation": 1,
+      "damage": 433,
+      "reviewer": "recorded visual readings"
+    },
+    {
+      "time": 750,
+      "state": "valid",
+      "match_id": "match-420-1020",
+      "own_view": true,
+      "kills": 1,
+      "assists": 1,
+      "participation": 1,
+      "damage": 459,
+      "reviewer": "recorded visual readings"
+    },
+    {
+      "time": 756,
+      "state": "valid",
+      "match_id": "match-420-1020",
+      "own_view": true,
+      "kills": 1,
+      "assists": 1,
+      "participation": 1,
+      "damage": 459,
+      "reviewer": "recorded visual readings"
+    },
+    {
+      "time": 762,
+      "state": "valid",
+      "match_id": "match-420-1020",
+      "own_view": true,
+      "kills": 1,
+      "assists": 1,
+      "participation": 1,
+      "damage": 459,
+      "reviewer": "recorded visual readings"
+    },
+    {
+      "time": 768,
+      "state": "valid",
+      "match_id": "match-420-1020",
+      "own_view": true,
+      "kills": 1,
+      "assists": 1,
+      "participation": 1,
+      "damage": 507,
+      "reviewer": "recorded visual readings"
+    },
+    {
+      "time": 774,
+      "state": "valid",
+      "match_id": "match-420-1020",
+      "own_view": true,
+      "kills": 1,
+      "assists": 1,
+      "participation": 1,
+      "damage": 563,
+      "reviewer": "recorded visual readings"
+    },
+    {
+      "time": 780,
+      "state": "valid",
+      "match_id": "match-720-1020",
+      "own_view": true,
+      "kills": 3,
+      "assists": 1,
+      "participation": 1,
+      "damage": 747,
+      "reviewer": "recorded visual readings"
+    }
+  ],
+  "known_banner_times": [
+    774,
+    778.5
+  ],
+  "registry_interval": [
+    720,
+    781
+  ],
+  "evidence": [
+    "match-split-774.png",
+    "match-split-780.png"
+  ]
+}

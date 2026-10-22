@@ -1,0 +1,67 @@
+{
+  "config_version": 1,
+  "scan": {
+    "fps": 2,
+    "mode": "economy",
+    "audit_seconds": 15,
+    "ocr": "auto"
+  },
+  "timing": {
+    "post_roll": 2,
+    "chain_gap": 7,
+    "pre_roll": 3,
+    "fire_padding": 3,
+    "lookback": 15,
+    "max_lookback": 20
+  },
+  "roi": {
+    "low": [
+      0.28,
+      0.55,
+      0.44,
+      0.28
+    ],
+    "high": [
+      0.28,
+      0.02,
+      0.44,
+      0.2
+    ],
+    "ammo": [
+      0.84,
+      0.88,
+      0.12,
+      0.11
+    ],
+    "stats": [
+      0.74,
+      0.035,
+      0.2,
+      0.14
+    ]
+  },
+  "review": {
+    "sparse_offset": 0.5,
+    "dense_fps": 12,
+    "dense_radius": 2
+  },
+  "tools": {
+    "ffmpeg": null,
+    "ffprobe": null
+  },
+  "prefilter": {
+    "enabled": true,
+    "minute_seconds": 60,
+    "min_damage": 150,
+    "fallback_divisions": 10,
+    "max_window": 30,
+    "boundary_padding": 1,
+    "marker_scope": null
+  },
+  "quality": {
+    "goal": "hud_gate",
+    "long_source_seconds": 1800,
+    "min_scan_fraction": 0.02,
+    "max_unresolved_fraction": 0.2
+  }
+}

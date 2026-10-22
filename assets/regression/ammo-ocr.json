@@ -1,0 +1,352 @@
+[
+  {
+    "time": 1998,
+    "ocr": {
+      "status": "ok",
+      "lines": [
+        {
+          "text": "32",
+          "score": 0.99869304895401,
+          "box": [
+            [
+              113,
+              22
+            ],
+            [
+              171,
+              22
+            ],
+            [
+              171,
+              59
+            ],
+            [
+              113,
+              59
+            ]
+          ]
+        },
+        {
+          "text": "896",
+          "score": 0.8093503018220266,
+          "box": [
+            [
+              116,
+              58
+            ],
+            [
+              169,
+              58
+            ],
+            [
+              169,
+              81
+            ],
+            [
+              116,
+              81
+            ]
+          ]
+        },
+        {
+          "text": "状",
+          "score": 0.8550235629081726,
+          "box": [
+            [
+              2,
+              92
+            ],
+            [
+              11,
+              92
+            ],
+            [
+              11,
+              103
+            ],
+            [
+              2,
+              103
+            ]
+          ]
+        },
+        {
+          "text": "死",
+          "score": 0.9992534518241882,
+          "box": [
+            [
+              113,
+              88
+            ],
+            [
+              154,
+              88
+            ],
+            [
+              154,
+              109
+            ],
+            [
+              113,
+              109
+            ]
+          ]
+        }
+      ],
+      "hints": {
+        "knockdown_hint": false,
+        "damage_hint": false,
+        "weak_reward_hint": false,
+        "assist_hint": false,
+        "assist_elimination_hint": false
+      },
+      "uncertain": true
+    }
+  },
+  {
+    "time": 1998.5,
+    "ocr": {
+      "status": "ok",
+      "lines": [
+        {
+          "text": "30",
+          "score": 0.9362918436527252,
+          "box": [
+            [
+              114,
+              22
+            ],
+            [
+              171,
+              22
+            ],
+            [
+              171,
+              58
+            ],
+            [
+              114,
+              58
+            ]
+          ]
+        },
+        {
+          "text": "255",
+          "score": 0.9949222405751547,
+          "box": [
+            [
+              117,
+              57
+            ],
+            [
+              168,
+              57
+            ],
+            [
+              168,
+              80
+            ],
+            [
+              117,
+              80
+            ]
+          ]
+        },
+        {
+          "text": "死散",
+          "score": 0.7111158818006516,
+          "box": [
+            [
+              137,
+              88
+            ],
+            [
+              177,
+              88
+            ],
+            [
+              177,
+              109
+            ],
+            [
+              137,
+              109
+            ]
+          ]
+        }
+      ],
+      "hints": {
+        "knockdown_hint": false,
+        "damage_hint": false,
+        "weak_reward_hint": false,
+        "assist_hint": false,
+        "assist_elimination_hint": false
+      },
+      "uncertain": true
+    }
+  },
+  {
+    "time": 2006,
+    "ocr": {
+      "status": "ok",
+      "lines": [
+        {
+          "text": "30",
+          "score": 0.8867038190364838,
+          "box": [
+            [
+              113,
+              21
+            ],
+            [
+              171,
+              21
+            ],
+            [
+              171,
+              58
+            ],
+            [
+              113,
+              58
+            ]
+          ]
+        },
+        {
+          "text": "255",
+          "score": 0.999254028002421,
+          "box": [
+            [
+              116,
+              57
+            ],
+            [
+              169,
+              57
+            ],
+            [
+              169,
+              80
+            ],
+            [
+              116,
+              80
+            ]
+          ]
+        },
+        {
+          "text": "死散",
+          "score": 0.7052963376045227,
+          "box": [
+            [
+              137,
+              88
+            ],
+            [
+              177,
+              88
+            ],
+            [
+              177,
+              109
+            ],
+            [
+              137,
+              109
+            ]
+          ]
+        }
+      ],
+      "hints": {
+        "knockdown_hint": false,
+        "damage_hint": false,
+        "weak_reward_hint": false,
+        "assist_hint": false,
+        "assist_elimination_hint": false
+      },
+      "uncertain": true
+    }
+  },
+  {
+    "time": 2006.5,
+    "ocr": {
+      "status": "ok",
+      "lines": [
+        {
+          "text": "25",
+          "score": 0.8704971075057983,
+          "box": [
+            [
+              114,
+              22
+            ],
+            [
+              171,
+              22
+            ],
+            [
+              171,
+              57
+            ],
+            [
+              114,
+              57
+            ]
+          ]
+        },
+        {
+          "text": "255",
+          "score": 0.999157190322876,
+          "box": [
+            [
+              117,
+              57
+            ],
+            [
+              168,
+              57
+            ],
+            [
+              168,
+              80
+            ],
+            [
+              117,
+              80
+            ]
+          ]
+        },
+        {
+          "text": "死",
+          "score": 0.9968826770782471,
+          "box": [
+            [
+              137,
+              88
+            ],
+            [
+              176,
+              88
+            ],
+            [
+              176,
+              109
+            ],
+            [
+              137,
+              109
+            ]
+          ]
+        }
+      ],
+      "hints": {
+        "knockdown_hint": false,
+        "damage_hint": false,
+        "weak_reward_hint": false,
+        "assist_hint": false,
+        "assist_elimination_hint": false
+      },
+      "uncertain": true
+    }
+  }
+]

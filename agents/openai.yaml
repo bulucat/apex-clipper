@@ -1,0 +1,6 @@
+interface:
+  display_name: "Apex 视频剪辑"
+  short_description: "一句话剪辑Apex录像，自动使用当前安装流程与防错检查，无需指定版本"
+  default_prompt: "使用 $apex-clipper 剪辑这个Apex视频，按当前安装版默认规则自动完成筛选、审核和导出。"
+policy:
+  allow_implicit_invocation: true

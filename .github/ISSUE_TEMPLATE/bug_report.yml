@@ -1,0 +1,29 @@
+name: "运行错误 / Bug report"
+description: "安装、扫描或导出失败；请附环境检查结果"
+body:
+  - type: input
+    id: version
+    attributes:
+      label: "版本 / Version"
+      description: "python apex.py --version"
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: "系统与环境 / Environment"
+      description: "粘贴 doctor 结果；先去掉自己的文件路径"
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: "复现步骤与报错 / Reproduction and error"
+      description: "命令、配置模式、失败阶段、预期结果和实际结果"
+    validations:
+      required: true
+  - type: textarea
+    id: model
+    attributes:
+      label: "AI 助手 / AI host and model"
+      description: "使用的工具、模型、推理强度；纯脚本问题可填不适用"

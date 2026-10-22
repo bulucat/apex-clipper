@@ -1,0 +1,36 @@
+name: OBS marker checks
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  markers:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      APEX_NO_VENV: "1"
+      APEX_REQUIRE_LUA_TESTS: "1"
+      PYTHONPATH: scripts
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+      - name: Install media tools and LuaJIT
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg libluajit-5.1-2
+      - name: Install Python dependencies
+        run: python -m pip install -r scripts/requirements.txt
+      - name: Check marker scope, resume behavior, Lua persistence, and release contents
+        run: >-
+          python -m unittest -v
+          test_marker_scope test_marker_audit test_obs_marker test_marker_package
+          test_hud_prefilter.GateTests test_hud_prefilter.AssistTests test_regression_265
+      - name: Build the source release
+        run: python apex.py package --output dist/apex-clipper-source.zip

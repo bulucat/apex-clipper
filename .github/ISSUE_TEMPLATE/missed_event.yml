@@ -1,0 +1,29 @@
+name: "漏检或误收 / Missed or incorrect event"
+description: "帮助改进横幅、观战、弹药和7秒连接判定"
+body:
+  - type: textarea
+    id: recording
+    attributes:
+      label: "录像条件 / Recording conditions"
+      description: "分辨率、帧率、UI语言、HUD缩放、游戏模式"
+    validations:
+      required: true
+  - type: textarea
+    id: event
+    attributes:
+      label: "事件与时间 / Event and timestamp"
+      description: "横幅首次出现秒数、应收还是应排除、实际发生了什么"
+    validations:
+      required: true
+  - type: textarea
+    id: settings
+    attributes:
+      label: "设置 / Settings"
+      description: "版本、economy/full、fps、ROI是否校准、模型和推理强度"
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: "可公开的证据 / Shareable evidence"
+      description: "可附打码截图或短样本；不需要上传整段私人录像，也不要附凭证"

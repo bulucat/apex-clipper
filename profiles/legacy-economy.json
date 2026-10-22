@@ -1,0 +1,13 @@
+{
+  "config_version": 1,
+  "scan": {
+    "fps": 2,
+    "mode": "economy"
+  },
+  "prefilter": {
+    "enabled": false
+  },
+  "quality": {
+    "goal": "complete"
+  }
+}

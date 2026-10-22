@@ -1,0 +1,30 @@
+# Local environments and machine-specific configuration
+.venv/
+.local/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.DS_Store
+Thumbs.db
+
+# Recordings, audit decisions, generated media, caches and release builds
+exports/
+dist/
+*_cache/
+*.mp4
+*.mkv
+*.mov
+*.avi
+*.webm
+*.log
+*.partial
+*.partial.mp4
+*.receipt.json
+final_full_*.json
+assist_pending_*.json
+review_pending_*.json
+rejected_*.json
+
+# Local credentials should never be part of this source package
+.env
+.env.*
