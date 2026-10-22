@@ -18,7 +18,7 @@ import apex
 import test_pipeline as pipeline
 from benchmark import compare
 from common import binary,probe,run,save_json
-from config import digest,load_config,policy_from_config,validate
+from config import VERSION,digest,load_config,policy_from_config,validate
 from cut_full import validate_manifest
 from environment import doctor,setup
 from package_release import package
@@ -46,9 +46,9 @@ class ConfigTests(unittest.TestCase):
         default=load_config(use_local=False)
         full=load_config(ROOT/"profiles/full-review.json")
         self.assertEqual((default["timing"]["post_roll"],default["timing"]["chain_gap"]),(2,7))
-        self.assertEqual((default["scan"]["fps"],full["scan"]["fps"],full["scan"]["mode"]),(4,4,"full"))
+        self.assertEqual((default["scan"]["fps"],full["scan"]["fps"],full["scan"]["mode"]),(2,4,"full"))
         speed=load_config(ROOT/"profiles/speed.json",use_local=False)
-        self.assertNotEqual(digest(default),digest(speed))
+        self.assertEqual(digest(default),digest(speed))
 
     def test_bad_settings_rejected(self):
         for group,key,value in [("scan","fps",True),("scan","fps",1),("timing","post_roll",8),
@@ -89,8 +89,8 @@ class ConfigTests(unittest.TestCase):
             root=Path(temp)
             config=root/"settings.json"
             save_json(config,{"scan":{"fps":3}})
-            save_json(root/"job.json",{"config_path":str(config)})
-            args=argparse.Namespace(config=None,workdir=str(root))
+            save_json(root/"job.json",{"config_path":str(config),"version":VERSION,"skill_root":str(ROOT)})
+            args=argparse.Namespace(config=None,workdir=str(root),command="scan")
             self.assertEqual(apex.configuration(args)[0]["scan"]["fps"],3)
             save_json(config,{"scan":{"fps":4}})
             self.assertEqual(apex.configuration(args)[0]["scan"]["fps"],4)
@@ -230,7 +230,8 @@ class PublicWorkflowTests(unittest.TestCase):
                 "evidence":"SYNTHETIC ENGINEERING TEST, NOT A REAL KILL","evidence_frames":[scan["pages"][0]["path"]],
                 "reviewed_start":0,"reviewed_end":8}]
             save_json(draft,data)
-            from test_guard_support import ammo_fixture,interval_fixture
+            from test_guard_support import ammo_fixture,interval_fixture,registry_fixture,damage_fixture
+            registry_fixture(work,8,evidence=[scan["pages"][0]["path"]])
             result=cli("ammo","--workdir",work,"--all")
             self.assertEqual(result.returncode,0,result.stdout+result.stderr)
             ammo_fixture(work,config)
@@ -239,6 +240,7 @@ class PublicWorkflowTests(unittest.TestCase):
             final=json.loads((work/"final.json").read_text(encoding="utf-8"))
             self.assertEqual((final["segments"][0]["start"],final["segments"][0]["end"]),(1,6))
             interval_fixture(work,config)
+            damage_fixture(work,config)
             data=json.loads(draft.read_text(encoding="utf-8"))
             self.assertEqual(json.loads(cli("status","--workdir",work).stdout)["stage"],"ready_to_export")
             result=cli("calibrate","--source",source,"--at","2","--outdir",root/"calibration","--config",path)

@@ -7,7 +7,7 @@ import os
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-VERSION = "2.6.7"
+VERSION = "2.6.8"
 
 
 def numeric(value, name, low=0, high=3600, positive=False):

@@ -1,3 +1,11 @@
+# 2.6.8 — 2026-10-22
+
+- Fix explicit full-source review: canonical match registration and admission checks no longer require a minute-HUD state for a full_scan. Final per-segment damage review remains mandatory.
+- Permit the actual first source frame as both before/start proof for cuts beginning at zero, requiring consistent damage readings; later cuts still require a strictly earlier frame.
+- Refresh generated-media and unit-test fixtures to import bound HUD observations, canonical matches, exact-cut damage proof and current job/config identities through the real validation APIs.
+- Align old default-profile assertions with the current 2fps HUD gate and compatible speed alias.
+- Run all regression tests in the platform/Python CI matrix. Restrict push triggers to main and cancel superseded runs to avoid duplicate branch/tag notifications.
+
 # 2.6.7 — 2026-10-22
 
 - Add the OBS Lua highlight marker: configurable hotkey, 60-second lookback, sidecar JSON and recording lifecycle handling.

@@ -279,20 +279,23 @@ class MediaTests(unittest.TestCase):
         path = self.path / "final.json"
         from config import load_config,digest
         from review_progress import update
-        from test_guard_support import ammo_fixture,interval_fixture
+        from test_guard_support import ammo_fixture,interval_fixture,registry_fixture,damage_fixture
         config=load_config(use_local=False)
         config["scan"].update(fps=2,mode="full",ocr="off")
+        config["prefilter"]["enabled"]=False
         save_json(self.path/"guard_config.json",config)
         save_json(self.path/"job.json",{"source":index["source"],"scan_index":str(index_path),"config_path":str(self.path/"guard_config.json")})
         events={"source":index["source"],"events":[dict(s) for s in segments]}
         save_json(self.path/"confirmed_events.json",events)
         decisions=self.path/"synthetic_decisions.json";save_json(decisions,{"events":[]})
         update(index_path,[p["id"] for p in index["pages"]],decisions,"synthetic engineering fixture")
+        registry_fixture(self.path,12,evidence=[evidence])
         ammo_fixture(self.path,config)
         data["events_identity"]=identity(self.path/"confirmed_events.json")
         data["config_digest"]=digest(load_config(self.path/"guard_config.json"))
         save_json(path,data)
         interval_fixture(self.path,config)
+        damage_fixture(self.path,config)
         return path, index
 
     def command(self, script, *args):

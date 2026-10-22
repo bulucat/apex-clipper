@@ -2,7 +2,7 @@ import unittest,tempfile,json
 from pathlib import Path
 from hud_prefilter import evaluate,key,growth_state
 from damage_review import _validate_review,check_admission_reviews
-from common import identity
+from common import identity,save_json
 class RepairRegression(unittest.TestCase):
  def rows(self,counts=True):
   return [dict(time=t,state='valid' if counts else 'partial',own_view=True,match_id='m',kills=k if counts else None,assists=a if counts else None,participation=None,damage=d) for t,k,a,d in [(6840,0,0,449),(6870,0,0,449),(6900,1,0,845)]]
@@ -31,4 +31,34 @@ class RepairRegression(unittest.TestCase):
   with tempfile.TemporaryDirectory() as td:
    s,r=self.fixture(Path(td),150);r['observations'][-1]['time']=20
    with self.assertRaisesRegex(ValueError,'last included frame'):_validate_review(r,s,'s',[dict(match_id='m',start=0,end=100)],1/30)
+ def test_full_scan_does_not_require_minute_admission_state(self):
+  with tempfile.TemporaryDirectory() as td:
+   root=Path(td);save_json(root/'scan.json',{'mode':'full_scan'})
+   self.assertEqual(check_admission_reviews(root,{'events':[{'class':'A','anchor':15}]}),[])
+ def test_full_scan_can_import_its_canonical_match_registry(self):
+  from quality_guard import import_registry
+  with tempfile.TemporaryDirectory() as td:
+   root=Path(td);evidence=root/'frame.png';evidence.write_bytes(b'engineering evidence')
+   save_json(root/'job.json',{'source':{'sha256':'s'}})
+   save_json(root/'scan.json',{'mode':'full_scan','media':{'duration':100}})
+   save_json(root/'registry-input.json',{'source_sha256':'s','matches':[dict(match_id='m',session_id='one',start=0,end=100,reviewer='test observer',reason='Known generated session',evidence_frames=[str(evidence)])]})
+   self.assertEqual(import_registry(root,root/'registry-input.json')['matches'],1)
+ def test_hud_scan_still_requires_minute_admission_state(self):
+  with tempfile.TemporaryDirectory() as td:
+   root=Path(td);save_json(root/'scan.json',{'mode':'hud_prefiltered_scan'})
+   self.assertTrue(check_admission_reviews(root,{'events':[{'class':'A','anchor':15}]}))
+ def test_source_start_uses_the_first_frame_for_before_and_start(self):
+  with tempfile.TemporaryDirectory() as td:
+   s,r=self.fixture(Path(td),150);s['start']=0;r['segment_start']=0
+   r['observations'][0]['time']=0;r['observations'][1]['time']=0
+   self.assertEqual(_validate_review(r,s,'s',[dict(match_id='m',start=0,end=100)],1/30)['damage_delta'],150)
+ def test_nonzero_start_still_requires_a_strictly_earlier_frame(self):
+  with tempfile.TemporaryDirectory() as td:
+   s,r=self.fixture(Path(td),150);r['observations'][0]['time']=s['start']
+   with self.assertRaisesRegex(ValueError,'Before observation'):_validate_review(r,s,'s',[dict(match_id='m',start=0,end=100)],1/30)
+ def test_first_frame_before_and_start_cannot_disagree(self):
+  with tempfile.TemporaryDirectory() as td:
+   s,r=self.fixture(Path(td),150);s['start']=0;r['segment_start']=0
+   r['observations'][0].update(time=0,damage=99);r['observations'][1]['time']=0
+   with self.assertRaisesRegex(ValueError,'same before/start'):_validate_review(r,s,'s',[dict(match_id='m',start=0,end=100)],1/30)
 if __name__=='__main__':unittest.main()

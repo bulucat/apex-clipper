@@ -2,7 +2,7 @@
 
 Provide the recording and ask to clip an Apex video. Use the current installed skill without naming a version. New/re-cut requests use fresh workdirs; only same-job resumes reuse compatible caches.
 
-[中文说明](README.md) · **2.6.7**
+[中文说明](README.md) · **2.6.8**
 
 An AI-assisted Apex Legends highlight workflow. Local visual proposals and CPU OCR
 identify material for review; an image-capable assistant confirms evidence and invokes FFmpeg.

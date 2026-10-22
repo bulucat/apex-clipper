@@ -1,6 +1,6 @@
 # Apex Clipper
 
-[English](README.en.md) · **2.6.7**
+[English](README.en.md) · **2.6.8**
 
 把 Apex 实况录像整理成保持原画幅的击倒集锦：本地扫描横幅、OCR提供线索，
 由具备图片理解能力的AI助手审核，再用FFmpeg切割和拼接。

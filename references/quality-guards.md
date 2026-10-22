@@ -158,7 +158,7 @@ quality.ready仅代表所记录证据通过一致性检查；最后仍须媒体p
 }
 ~~~
 
-start必须等于最终片段start；end是end之前一帧且距离片段end不超过一帧；before在start前1秒以内。三个观察都须为同一登记对局、本人视角、直接视觉读数，计数不得回退。导入按端点重算end.damage-start.damage，必须>=150；审核证据身份在导入时固定。HUD分钟读数、击倒分数、助攻、伤害飘字都不能替代片段端点的真实HUD伤害增长。片段重规划后重新提交。
+start必须等于最终片段start；end是end之前一帧且距离片段end不超过一帧；before在start前1秒以内。仅当片段确实从原片0秒开始时，before与start可同时使用0秒的第一帧，两者伤害读数必须一致；其他起点仍须严格更早的before证据。三个观察都须为同一登记对局、本人视角、直接视觉读数，计数不得回退。导入按端点重算end.damage-start.damage，必须>=150；审核证据身份在导入时固定。HUD分钟读数、击倒分数、助攻、伤害飘字都不能替代片段端点的真实HUD伤害增长。片段重规划后重新提交。
 
 decision="exclude"仅在同样绑定的真实端点证明增长为0到149时接受，必须填写reviewer与具体reason；导入会写damage_exclusions.json并从confirmed_events.json移除该片段锚点；随后必须重新plan并审核新的最终切点。低于150不能留在最终片段中，也不能把42当作合格伤害。
 

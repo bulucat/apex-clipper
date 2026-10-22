@@ -146,10 +146,16 @@ def import_registry(work, submission):
     data = copy.deepcopy(data)
     for match in data.get("matches", []):
         match["evidence_identities"] = evidence_records(match.get("evidence_frames"))
-    duration = read(root/"hud_state.json")["media"]["duration"]
+    report = read(root/"hud_state.json") if (root/"hud_state.json").is_file() else None
+    if report is None:
+        scan = read(root/"scan.json")
+        if scan.get("mode") != "full_scan":
+            raise ValueError("Minute-gated scans require their HUD state before match registration")
+        duration = scan["media"]["duration"]
+    else:
+        duration = report["media"]["duration"]
     validate_registry(data, job["source"]["sha256"], duration)
-    report = read(root/"hud_state.json")
-    readings = read(report["readings_path"])
+    readings = read(report["readings_path"]) if report else {"readings": []}
     for row in readings["readings"]:
         if row.get("state") not in ("valid", "partial"):
             continue
@@ -163,7 +169,8 @@ def import_registry(work, submission):
     if errors:
         raise ValueError("Registry conflict: " + json.dumps(errors[:4], ensure_ascii=False))
     save_json(root/"match_registry.json", data)
-    save_json(report["readings_path"], readings)
+    if report:
+        save_json(report["readings_path"], readings)
     return {"matches": len(data["matches"]), "action": "Rerun scan; old HUD/scan/review identities are invalidated"}
 
 

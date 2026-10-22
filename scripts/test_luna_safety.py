@@ -8,6 +8,7 @@ from hud_prefilter import evaluate, key, validate_readings
 from hud_import import merge
 from config import load_config
 from test_hud_prefilter import row, table
+from test_guard_support import observed_fixture_row
 
 class SafetyTests(unittest.TestCase):
     def test_partial_negative_gate_and_unknown_not_zero(self):
@@ -15,11 +16,13 @@ class SafetyTests(unittest.TestCase):
         for r in (a,b):r.update(state='partial',kills=None,assists=None,participation=None)
         settings=load_config(use_local=False)['prefilter']
         data={'cache_key':'x','readings':[a,b]}
-        rows=validate_readings(data,'x')
+        with tempfile.TemporaryDirectory() as images:
+            data['readings']=[observed_fixture_row(r,images) for r in data['readings']]
+            rows=validate_readings(data,'x')
         result=evaluate(rows,[0,60],settings)
         self.assertFalse(result['requests']);self.assertFalse(result['windows'])
-        b['damage']=300
-        self.assertEqual(len(evaluate(rows,[0,60],settings)['requests']),9)
+        rows[key(60)]['damage']=300
+        self.assertEqual([r['reason'] for r in evaluate(rows,[0,60],settings)['requests']],['midpoint_hidden_counters'])
 
     def test_missing_boss_does_not_trigger_recovery(self):
         a=row(0);b=row(60,k=1,d=200);m=row(30)
@@ -35,6 +38,9 @@ class SafetyTests(unittest.TestCase):
     def test_worker_merge_rejects_foreign_duplicate_and_unsupported_spectator(self):
         with tempfile.TemporaryDirectory() as tmp:
             p=Path(tmp);data={'cache_key':'x','readings':[row(0,state='pending')]}
+            evidence=p/'synthetic.png';evidence.write_bytes(b'SYNTHETIC ONLY')
+            stats=p/'stats_0.000000.png';stats.write_bytes(b'ENGINEERING COUNTERS')
+            data['readings'][0].update(source_path=str(evidence),stats_path=str(stats))
             save_json(p/'readings.json',data)
             report={'cache_key':'x','readings_path':str(p/'readings.json'),'requests':[{'time':0}],
                     'source':{'sha256':'synthetic'},'media':{'duration':60}}
@@ -50,7 +56,7 @@ class SafetyTests(unittest.TestCase):
             sub['cache_key']='x';sub['readings']=[row(0,state='spectator')]
             save_json(p/'sub.json',sub)
             with self.assertRaises(ValueError):merge(p/'report.json',p/'sub.json')
-            sub['readings']=[row(0)];save_json(p/'sub.json',sub)
+            sub['readings']=[dict(row(0),reviewer='ENGINEERING TEST FIXTURE',reading_method='visual')];save_json(p/'sub.json',sub)
             self.assertEqual(merge(p/'report.json',p/'sub.json')['imported'],1)
             with self.assertRaises(ValueError):merge(p/'report.json',p/'sub.json')
 

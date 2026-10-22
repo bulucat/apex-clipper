@@ -7,7 +7,7 @@ description: >
   最终每段本人实际伤害至少150，保留原画幅与声音。
 license: MIT
 metadata:
-  version: "2.6.7"
+  version: "2.6.8"
   base: "Natural-language entry, fresh runs and installed-version binding, 2026-10-18"
   source_project: "Apex-Shorts-Automator-main"
   language: "zh-CN primary, banner terms in zh-TW and EN"

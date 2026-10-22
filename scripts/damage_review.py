@@ -57,7 +57,10 @@ def _validate_review(review, segment, source_sha256, matches, frame_tolerance):
                 raise ValueError("Damage must be a nonnegative integer; unavailable start values remain null")
     if abs(start["time"] - segment["start"]) > 1e-6:
         raise ValueError("Start observation must be bound to the exact final segment start")
-    if not start["time"] - 1.001 <= before["time"] < start["time"]:
+    source_start = segment["start"] == 0 and before["time"] == start["time"] == 0
+    if source_start and before["damage"] != start["damage"]:
+        raise ValueError("The first source frame must have the same before/start damage reading")
+    if not source_start and not start["time"] - 1.001 <= before["time"] < start["time"]:
         raise ValueError("Before observation must be within one second before the segment start")
     if abs(end["time"]-(segment["end"]-frame_tolerance)) > 1e-5:
         raise ValueError("End observation must be the last included frame at the exact segment end")
@@ -208,8 +211,12 @@ def _probe_only_event(anchor, scan):
 def check_admission_reviews(work, events_data):
     root = Path(work)
     try:
-        scan = _read(root / "hud_state.json")
         scan2 = _read(root / "scan.json")
+        # Explicit full-source scans have no minute-gate/probe-only admission stage.
+        # Final segment damage and all other delivery checks still apply.
+        if scan2.get("mode") == "full_scan":
+            return []
+        scan = _read(root / "hud_state.json")
         scan.setdefault("windows", scan2.get("prefilter", {}).get("windows", []))
     except (ValueError, OSError, KeyError, TypeError) as exc:
         return [{"code": "admission_review_invalid", "detail": str(exc)}]

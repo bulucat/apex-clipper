@@ -12,6 +12,7 @@ from quality_guard import (check_match_rows, validate_registry, gate_audit, ammo
                            check_clip_starts, audit_workdir, import_registry, import_coverage_review)
 from plan_clips import plan_segments
 from test_hud_prefilter import row, table
+from test_guard_support import observed_fixture_row
 
 
 class GuardTests(unittest.TestCase):
@@ -52,12 +53,13 @@ class GuardTests(unittest.TestCase):
                     event["ammo_review"]=copy.deepcopy(review)
         return events
 
-    def test_default_full_source_and_explicit_speed(self):
-        self.assertFalse(self.config["prefilter"]["enabled"])
-        self.assertEqual((self.config["scan"]["fps"],self.config["scan"]["mode"]),(4,"full"))
+    def test_default_hud_gate_and_compatible_speed_alias(self):
+        self.assertTrue(self.config["prefilter"]["enabled"])
+        self.assertEqual((self.config["scan"]["fps"],self.config["scan"]["mode"]),(2,"economy"))
         speed=load_config(Path(__file__).resolve().parent.parent/"profiles/speed.json",use_local=False)
         self.assertTrue(speed["prefilter"]["enabled"])
-        self.assertEqual(speed["quality"]["goal"],"fast")
+        self.assertEqual(speed["quality"]["goal"],"hud_gate")
+        self.assertEqual(digest(speed),digest(self.config))
 
     def test_recorded_match_split_keeps_both_observed_knockdowns(self):
         assets=Path(__file__).resolve().parent.parent/"assets/regression"
@@ -106,9 +108,10 @@ class GuardTests(unittest.TestCase):
         rows.append(row(30,k=1,d=459,match="batch-A"))
         # One timestamp only; fixture intentionally exercises a midpoint that uses another batch label.
         rows={key(r["time"]):r for r in rows}
-        hud={"source":self.source,"minute_times":[0,60],"settings":self.config["prefilter"],
+        rows={k:observed_fixture_row(r,self.root) for k,r in rows.items()}
+        hud={"cache_key":"fixture","source":self.source,"minute_times":[0,60],"settings":self.config["prefilter"],
              "scan_ranges":[],"requests":[]}
-        problems=gate_audit(hud,{"readings":list(rows.values())},self.registry,120)
+        problems=gate_audit(hud,{"cache_key":"fixture","readings":list(rows.values())},self.registry,120)
         self.assertIn("gate_window_missing",{p["code"] for p in problems})
         fixed=copy.deepcopy(list(rows.values()))
         for r in fixed:r["match_id"]="canonical"

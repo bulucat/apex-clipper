@@ -1,10 +1,14 @@
 name: "Pipeline checks"
 on:
   push:
+    branches: [main]
   pull_request:
   workflow_dispatch:
 permissions:
   contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   pipeline:
     strategy:
@@ -14,6 +18,9 @@ jobs:
         python: ["3.11", "3.12"]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 20
+    env:
+      APEX_NO_VENV: "1"
+      PYTHONUTF8: "1"
     steps:
       - uses: actions/checkout@v7
         with:
@@ -34,8 +41,7 @@ jobs:
           choco install ffmpeg -y --no-progress
           "C:\ProgramData\chocolatey\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
       - run: python -m pip install -r scripts/requirements-ocr.txt
-      - run: python scripts/test_pipeline.py
-      - run: python scripts/test_public.py
-      - run: python scripts/test_hud_prefilter.py
+      - name: Run all regression and generated-media tests
+        run: python -m unittest discover -s scripts -p "test_*.py" -v
       - run: python apex.py doctor
       - run: python apex.py package --output dist/apex-clipper-source.zip
