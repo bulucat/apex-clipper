@@ -2,7 +2,7 @@
 
 Provide the recording and ask to clip an Apex video. Use the current installed skill without naming a version. New/re-cut requests use fresh workdirs; only same-job resumes reuse compatible caches.
 
-[中文说明](README.md) · **2.6.8**
+[中文说明](README.md) · **2.7.0**
 
 An AI-assisted Apex Legends highlight workflow. Local visual proposals and CPU OCR
 identify material for review; an image-capable assistant confirms evidence and invokes FFmpeg.
@@ -14,6 +14,14 @@ No audio-peak or Top K candidate selection.
 
 This beta requires visual review. OCR output alone does not confirm a kill, and the project
 has no measured real-game recall, model comparison or token-savings benchmark yet.
+
+## Guided entry (2.7)
+
+On Windows, open **Start-Apex-Clipper.cmd** after extracting the whole project. Python and FFmpeg are still required. The local launcher checks dependencies and shows the current visual task. No embedded model account or API key is supplied.
+
+Use python apex.py run --source recording.mp4, then follow next/submit. The program controls transitions and binds evidence; the assistant answers task cards. Unknown decisions pause safely. Strict clipping keeps all existing rules. The separate marked-export option exports marked excerpts without claiming event/damage review. Real-game Luna accuracy is not established.
+
+See [guided review](references/guided-review.md).
 
 ## Mark highlights while recording in OBS
 

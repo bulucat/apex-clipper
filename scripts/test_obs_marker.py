@@ -87,6 +87,21 @@ class LuaTests(unittest.TestCase):
         if rc:
             self.fail(LUA.lua_tolstring(self.vm,-1,None).decode('utf8'))
 
+    def test_optional_sound_occurs_only_after_successful_save(self):
+        self.run_lua('''
+beeps=0
+package.loaded['ffi']={os='Windows',cdef=function() end,load=function()
+    return {MessageBeep=function() beeps=beeps+1;return 1 end}
+end}
+obslua.obs_data_get_bool=function() return true end
+script_update({})
+start();frames=300;mark(true);assert(beeps==1)
+paused=true;frames=600;mark(true);assert(beeps==1)
+paused=false;fail_write=true;frames=900;mark(true);assert(beeps==1)
+fail_write=false;poll();assert(countmarks()==2)
+stop()
+''')
+
     def test_corrupted_existing_file_is_never_overwritten(self):
         self.run_lua('''
 local file=current..'.apex-markers.json'

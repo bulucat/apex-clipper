@@ -13,8 +13,8 @@ a skipped native test is not a platform pass. The dedicated marker CI workflow r
 | Item | Status |
 |---|---|
 | Windows + Python3.12 + FFmpeg/ffprobe9.0.2 | Pipeline, OCR and synthetic-media checks run locally |
-| Python3.11 | CI target; not yet established by the public-workflow validation |
-| Linux/macOS | CI definitions supplied; execution pending |
+| Python3.11 | 2.6.8 engineering CI passed; latest changes follow repository Actions |
+| Linux/macOS | 2.6.8 engineering CI passed; no native gameplay/hotkey claim |
 | RapidOCR ONNXRuntime1.4.4 | Local reference-crop and numeric OCR exercised; Chinese words can be misread |
 | Other AI hosts | Must supply local image viewing, script execution and file access; not separately verified |
 | Luna medium / Sol medium / other models | No real-game comparative benchmark yet |

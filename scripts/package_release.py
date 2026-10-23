@@ -9,7 +9,7 @@ import zipfile
 
 from config import VERSION
 
-ROOT_FILES={"apex.py","SKILL.md","README.md","README.en.md","LICENSE","NOTICE.md","CONTRIBUTING.md","CHANGELOG.md",".gitignore"}
+ROOT_FILES={"apex.py","SKILL.md","README.md","README.en.md","LICENSE","NOTICE.md","CONTRIBUTING.md","CHANGELOG.md",".gitignore","Start-Apex-Clipper.cmd"}
 ROOT_DIRS={"scripts","references","profiles","assets","agents",".github","obs"}
 EXTENSIONS={".py",".md",".txt",".json",".png",".svg",".yml",".yaml",".lua"}
 EXCLUDED={".venv",".local","__pycache__","exports","dist",".git",".pytest_cache"}

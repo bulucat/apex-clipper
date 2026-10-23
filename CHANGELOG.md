@@ -1,3 +1,11 @@
+# 2.7.0
+
+- Fix HUD corrections retaining omitted old counters/view labels and incorrect pre-scan status reporting.
+- Add guarded run/next/submit task cards, bounded visual work, program-owned evidence, detail requests and resumable pauses.
+- Add a Windows launcher, explicit unreviewed marked-excerpt export, and optional OBS success feedback/status.
+- Preserve strict minute/final 150 damage gates and all media/delivery guards.
+- Separate engineering controller validation from unmeasured real-game model accuracy.
+
 # 2.6.8 — 2026-10-22
 
 - Fix explicit full-source review: canonical match registration and admission checks no longer require a minute-HUD state for a full_scan. Final per-segment damage review remains mandatory.

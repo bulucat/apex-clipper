@@ -155,6 +155,16 @@ def status(work,config=None):
             return {"stage":"awaiting_hud_review","pending_images":len(hud["requests"]),
                 "readings_path":hud["readings_path"],"pages":hud["pages"],"action":"Visually read requested HUD crops, save readings, rerun scan"}
     if not scan_path.is_file():
+        if config is not None and config["prefilter"]["enabled"] and (root/"hud_state.json").is_file():
+            from quality_guard import gate_audit, read
+            registry=root/"match_registry.json"
+            errors=gate_audit(hud,read(hud["readings_path"]),read(registry) if registry.is_file() else None,hud["media"]["duration"])
+            if errors:
+                match_errors=any(e["code"].startswith(("match_","session_","counter_reset","suspected_match")) for e in errors)
+                return {"stage":"awaiting_match_review" if match_errors else "awaiting_quality_review",
+                        "errors":errors,"workdir":str(root),
+                        "action":"Review and import the canonical matches, then rerun scan" if match_errors else "Resolve the reported HUD evidence and rerun scan"}
+            return {"stage":"awaiting_local_scan","workdir":str(root),"action":"Rerun scan to continue the prepared local scan"}
         return {"stage":"scan_not_started","workdir":str(root)}
     scan=json.loads(scan_path.read_text(encoding="utf-8"))
     if config is not None:
@@ -254,7 +264,13 @@ def export(args,config):
     if args.verbose:
         command.append("--verbose")
     print("STAGE 3/3: manifest validation and export",flush=True)
-    result=subprocess.run(command)
+    if getattr(args,"quiet",False):
+        result=subprocess.run(command,capture_output=True,text=True,encoding="utf-8",errors="replace")
+        logs=root/"workflow"
+        logs.mkdir(exist_ok=True)
+        (logs/"export.log").write_text((result.stdout or "")+(result.stderr or ""),encoding="utf-8")
+    else:
+        result=subprocess.run(command)
     if result.returncode:
         raise ValueError("Export failed; previous validated outputs and audit records are retained")
 
@@ -265,6 +281,12 @@ def parser():
     sub=ap.add_subparsers(dest="command",required=True)
     from review_transfer import add_commands
     add_commands(sub)
+    from workflow import add_commands as add_workflow_commands
+    add_workflow_commands(sub)
+    from marked_export import add_commands as add_marked_commands
+    add_marked_commands(sub)
+    from evaluate_reviews import add_commands as add_eval_commands
+    add_eval_commands(sub)
     p=sub.add_parser("setup",help="Install dependencies into local .venv")
     p.add_argument("--without-ocr",action="store_true")
     p.add_argument("--create-only",action="store_true",help="Create environment without downloading packages")
@@ -338,6 +360,19 @@ def main():
     if python.is_file() and Path(sys.prefix).resolve()!=python.parent.parent.resolve() and "setup" not in sys.argv[1:] and os.environ.get("APEX_NO_VENV")!="1":
         raise SystemExit(subprocess.call([str(python),str(Path(__file__).resolve()),*sys.argv[1:]]))
     args=parser().parse_args()
+    if args.command=="evaluate":
+        from evaluate_reviews import evaluate
+        print(json.dumps(evaluate(args.labels,args.answers,args.output),ensure_ascii=False))
+        return
+    if args.command=="marked-export":
+        from marked_export import export_marked
+        config,_=configuration(args)
+        print(json.dumps(export_marked(args.source,args.output,args.markers),ensure_ascii=False))
+        return
+    if args.command in ("run", "next", "submit"):
+        from workflow import execute
+        print(json.dumps(execute(args),ensure_ascii=False))
+        return
     if args.command in ("preview", "preview-seen"):
         from review_transfer import execute
         print(json.dumps(execute(args),ensure_ascii=False))

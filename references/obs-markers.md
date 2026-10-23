@@ -38,3 +38,9 @@ OBS 加载 `apex-marker.lua` 后，由 OBS 自己注册全局热键；录制时�
 依据：[OBS 脚本加载说明](https://obsproject.com/kb/scripting-guide)、
 [OBS 前端录制接口](https://docs.obsproject.com/reference-frontend-api)、
 [官方 obs-websocket 的输出时长计算](https://github.com/obsproject/obs-websocket/blob/master/src/utils/Obs_NumberHelper.cpp)。
+
+## 1.1 可选反馈
+
+OBS脚本属性可启用Windows提示音，仅在本次标记保存成功时请求播放；默认关闭，声音可能被桌面音频录入。脚本属性提供刷新状态按钮，查看当前标记数量和最后标记时间。实际全屏热键与长录计时仍需短录屏核对。
+
+精选击倒仍完整审核。用户明确选择直接导出时可用marked-export，生成明确标为未做击倒/伤害审核的片段。

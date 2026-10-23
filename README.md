@@ -1,6 +1,6 @@
 # Apex Clipper
 
-[English](README.en.md) · **2.6.8**
+[English](README.en.md) · **2.7.0**
 
 把 Apex 实况录像整理成保持原画幅的击倒集锦：本地扫描横幅、OCR提供线索，
 由具备图片理解能力的AI助手审核，再用FFmpeg切割和拼接。
@@ -12,6 +12,16 @@
 
 这是一套AI助手驱动的技能与脚本。扫描结束后仍需要视觉审核，不会仅凭OCR自动宣布击倒。
 尚未完成跨录像、跨模型的检出率与成本基准，不能保证零漏检。
+
+## 更简单的开始方式（2.7）
+
+Windows下载并解压完整项目后，双击 **Start-Apex-Clipper.cmd**：选择录像、检查环境、开始剪辑。仍需Python和FFmpeg，窗口会显示缺项，不修改系统Python。
+
+- **精选击倒**：保留150伤害与完整审核。AI逐项看任务卡；程序负责流程、身份绑定、连接、切点和导出。
+- **直接导出标记片段**：明确选择后直接切出标记范围，不做击倒/150伤害审核，不声称是已验证集锦。
+
+已加载skill的助手可运行 python apex.py run --source "录像.mp4"，再循环next/submit。
+无需另填API密钥，需使用能实际查看本地图片的助手；Luna准确率仍须实录验收。见[逐项审核入口](references/guided-review.md)。
 
 ## 一句话开始
 
@@ -164,7 +174,7 @@ python apex.py scan --source "录像.mp4" --workdir exports/full/full1 --config 
 
 以“图片理解＋脚本工具＋文件访问”能力为准。Luna中等可以作为省成本尝试，
 但本项目尚未完成它与其他模型的实录对照，不把建议写成准确率承诺。
-Windows为当前实际验证平台；macOS/Linux已提供自动测试配置，运行结果需在仓库CI完成后再认定。
+Windows、macOS、Linux与Python3.11/3.12的2.6.8工程流水线已通过；新增版本以仓库Actions为准。工程检查不等于真实游戏或模型准确率验证。
 
 ## 问题与贡献
 

@@ -33,6 +33,11 @@ def merge(report_path, submission_path):
                    "reviewer", "reading_method", "own_downed", "spectator_terms", "spectator_region", "note", "session_id"}
         if set(row) - allowed:
             raise ValueError("Unexpected worker fields")
+        # A correction is a new observation, never a patch over old decisions.
+        # Preserve generated image paths/history, but clear omitted numbers and labels.
+        for field in allowed - {"time"}:
+            targets[k].pop(field, None)
+        targets[k].update({field: None for field in ("kills", "assists", "participation", "damage")})
         targets[k].update(row)
         if row["state"] in ("valid", "partial"):
             target = targets[k]

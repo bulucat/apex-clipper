@@ -1,3 +1,13 @@
+# 2.7 新入口验收
+
+新增run/next/submit工程用例：完整正/负流程、150门槛拒绝、隐藏人数补证、未决范围不自动跳过、外来/过期任务、图片变更、重复提交、补图上限与暂停。直接标记导出明确不声称视觉或伤害审核。具体结果以当前Actions为准。
+
+独立Luna medium看过两张生成的HUD任务图，schema和两行已知读数均核对通过，遮挡数字保留null。这只验证小样本任务卡协议，不是真实Apex准确率或整段自主剪辑基准。
+
+离线evaluate需要人工标签JSONL（case_id/kind/expected，可选tolerance）和实际答案JSONL（case_id/model/run_id/outcome/result，可选elapsed_seconds/usage）。不调用API、不生成标签；缺答和未决计入未通过，空数据不计算准确率。真实场景应覆盖观战、换枪、跨局、助攻、7秒边界和隐藏HUD；重复运行并单独记录采样漏检与模型误判。
+
+下方保留历史记录，不代表当前版本的实录验证。
+
 # V2.6.3 分钟准入恢复
 
 默认恢复分钟HUD、一次二分、局部2fps；可用读数新增reading_method与导入生成的observation图像/时间/数值绑定。

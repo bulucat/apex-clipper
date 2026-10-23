@@ -1,4 +1,4 @@
--- Apex OBS Marker 1.0.1. Load through OBS Tools -> Scripts; no Python required.
+-- Apex OBS Marker 1.1.0. Load through OBS Tools -> Scripts; no Python required.
 -- Marker data stays beside the recording. Video/audio are never modified.
 obs = obslua
 local state = nil
@@ -6,6 +6,18 @@ local pending_writes = {}
 local lookback = 60
 local hotkey = obs.OBS_INVALID_HOTKEY_ID
 local last_press = -10
+local audible_feedback = false
+local last_status = "尚未开始录制"
+local function feedback()
+    if not audible_feedback then return end
+    local ok, ffi = pcall(require, "ffi")
+    if not ok or ffi.os ~= "Windows" then return end
+    -- Optional system sound; failure must never affect saving a marker.
+    pcall(function()
+        ffi.cdef("int MessageBeep(unsigned int uType);")
+        ffi.load("user32").MessageBeep(0x40)
+    end)
+end
 
 local function log(level, text)
     obs.script_log(level, "[Apex Marker] " .. text)
@@ -88,6 +100,7 @@ local function begin_recording()
         status="recording", lookback=lookback, fps_num=info.fps_num,
         fps_den=info.fps_den, divisor=math.max(1, divisor), dirty=true}
     last_press = -10
+    last_status = "录制中：0 个标记"
     persist()
     log(obs.LOG_INFO, "Ready. Markers will be saved to " .. sidecar)
 end
@@ -136,6 +149,8 @@ local function add_mark(pressed)
     state.duration = t
     table.insert(state.markers, t)
     if persist() then
+        last_status = string.format("已保存 %d 个标记；最后一次 %.3f 秒", #state.markers, t)
+        feedback()
         log(obs.LOG_INFO, string.format("Saved mark #%d at %.3fs; review %.3f..%.3fs.",
             #state.markers, t, math.max(0,t-state.lookback), t))
     end
@@ -154,6 +169,7 @@ local function finish(status)
         table.insert(pending_writes, finished)
         log(obs.LOG_ERROR, "Final marker save failed; retrying while this script remains loaded: " .. finished.sidecar)
     end
+    last_status = string.format("本次 %d 个标记；录制已结束%s", #finished.markers, saved and "，已保存" or "，等待保存重试")
     state = nil
 end
 
@@ -163,7 +179,7 @@ local function on_event(event)
 end
 
 function script_description()
-    return [[<h3>Apex 精彩标记助手 1.0.1</h3>
+    return [[<h3>Apex 精彩标记助手 1.1.0</h3>
     <p>录制时按快捷键，剪辑时只检查标记前的内容。默认 60 秒。</p>
     <p>加载后到「设置 → 热键」搜索 <b>Apex：标记精彩操作</b>，自行设置 F8 等不冲突的键。
     暂停录制和未录制时不接受标记；连续两秒内重复按键只记一次。</p>
@@ -173,10 +189,22 @@ end
 
 function script_defaults(settings)
     obs.obs_data_set_default_int(settings, "lookback_seconds", 60)
+    if obs.obs_data_set_default_bool then obs.obs_data_set_default_bool(settings, "audible_feedback", false) end
 end
 
 function script_properties()
     local props = obs.obs_properties_create()
+    if obs.obs_properties_add_bool then
+        obs.obs_properties_add_bool(props, "audible_feedback", "标记保存成功时播放Windows提示音（可能被桌面音频录入）")
+    end
+    if obs.obs_properties_add_text and obs.OBS_TEXT_INFO then
+        obs.obs_properties_add_text(props, "marker_status", last_status, obs.OBS_TEXT_INFO)
+        obs.obs_properties_add_button(props, "refresh_status", "刷新标记状态", function(properties)
+            local property = obs.obs_properties_get(properties, "marker_status")
+            if property then obs.obs_property_set_description(property, last_status) end
+            return true
+        end)
+    end
     obs.obs_properties_add_int(props, "lookback_seconds", "标记前检查多少秒（下次录制生效）", 1, 600, 1)
     obs.obs_properties_add_button(props, "mark_now", "立即标记（测试）", function()
         add_mark(true)
@@ -187,6 +215,7 @@ end
 
 function script_update(settings)
     lookback = math.max(1, math.min(600, obs.obs_data_get_int(settings, "lookback_seconds")))
+    audible_feedback = obs.obs_data_get_bool and obs.obs_data_get_bool(settings, "audible_feedback") or false
 end
 
 function script_load(settings)
