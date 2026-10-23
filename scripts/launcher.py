@@ -160,10 +160,12 @@ class Launcher:
             details=value.get('reason','当前需要补充审核或处理环境问题。')
             if any(e.get('code')=='hud_unresolved_review_required' for e in value.get('errors',[])):
                 details='仍有较多看不清的战绩范围，需要补核，或由你明确决定是否只交付已确认部分。程序没有代替你跳过。'
+            if value.get('task_path'):
+                details+='\n\n待复核任务仍保留，可复制给AI继续查看原图后提交答案。'
             self.append(details+'\n\n进度目录：'+str(self.workdir or '尚未创建任务'))
 
     def copy_task(self):
-        if not self.current or self.current.get('stage')!='review_required':return
+        if not self.current or not self.current.get('task_path'):return
         task_path=self.current['task_path'];root=self.workdir
         text=('请实际读取任务卡和其中的本地图片，按result_schema回答。不要猜数字，不要修改脚本或审核记录。'
               +'\n任务卡：'+task_path+'\n任务目录：'+root

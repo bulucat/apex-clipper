@@ -144,7 +144,7 @@ def validate_manifest(data, source, media):
 def cut_one(src, out, segment, source, media, ffmpeg, verbose=False):
     # Identity includes reviewed decision and source; an unrelated 50KB file is never a cache hit.
     signature = hashlib.sha256(json.dumps({"source": source["sha256"], "segment": segment,
-        "encoding": "libx264-fast-crf18-aac-v2.4"}, sort_keys=True).encode()).hexdigest()
+        "encoding": "libx264-fast-crf18-all-audio-v2.7.1"}, sort_keys=True).encode()).hexdigest()
     receipt = out.with_suffix(".receipt.json")
     if out.exists() and receipt.exists():
         try:
@@ -158,7 +158,7 @@ def cut_one(src, out, segment, source, media, ffmpeg, verbose=False):
     tmp = out.with_name(out.stem + ".partial.mp4")
     try:
         run([ffmpeg, "-y", "-v", "error", "-ss", str(segment["start"]), "-i", str(src),
-             "-t", str(segment["end"] - segment["start"]), "-map", "0:v:0", "-map", "0:a:0?",
+             "-t", str(segment["end"] - segment["start"]), "-map", "0:v:0", "-map", "0:a?",
              "-c:v", "libx264", "-preset", "fast", "-crf", "18", "-c:a", "aac", "-movflags", "+faststart", str(tmp)])
         media_check(tmp, media, segment["end"] - segment["start"])
         os.replace(tmp, out)
@@ -179,7 +179,7 @@ def concatenate(paths, output, media, duration, verbose=False):
         raise ValueError("Compilation path collides with a segment")
     output.parent.mkdir(parents=True, exist_ok=True)
     signature = hashlib.sha256(json.dumps({"clips": [identity(p)["sha256"] for p in paths],
-        "fps": media["fps"], "encoding": "libx264-crf18-v2.4"}, sort_keys=True).encode()).hexdigest()
+        "fps": media["fps"], "encoding": "libx264-crf18-all-audio-v2.7.1"}, sort_keys=True).encode()).hexdigest()
     receipt = output.with_suffix(".receipt.json")
     if output.is_file() and receipt.is_file():
         try:
@@ -195,7 +195,7 @@ def concatenate(paths, output, media, duration, verbose=False):
             # ffmpeg concat quoting: backslash/apostrophe escaped, use forward-slash paths.
             lines = ["file '" + p.resolve().as_posix().replace("'", "'\\''") + "'" for p in paths]
             filelist.write_text("\n".join(lines) + "\n", encoding="utf-8")
-            run([binary("ffmpeg"), "-y", "-v", "error", "-f", "concat", "-safe", "0", "-i", str(filelist),
+            run([binary("ffmpeg"), "-y", "-v", "error", "-f", "concat", "-safe", "0", "-i", str(filelist), "-map", "0:v:0", "-map", "0:a?",
                  "-c:v", "libx264", "-preset", "fast", "-crf", "18", "-r", str(media["fps"]),
                  "-fps_mode", "cfr", "-c:a", "aac", "-movflags", "+faststart", str(tmp)])
         media_check(tmp, media, duration)

@@ -25,7 +25,7 @@ def export_marked(source, output=None, markers=None):
             target=root/('marked_'+str(n).zfill(3)+'.mp4');partial=target.with_suffix('.partial.mp4')
             temporary.append(partial)
             run([binary('ffmpeg'),'-y','-v','error','-ss',str(a),'-i',str(source),'-t',str(b-a),
-                 '-map','0:v:0','-map','0:a:0?','-c:v','libx264','-preset','fast','-crf','18',
+                 '-map','0:v:0','-map','0:a?','-c:v','libx264','-preset','fast','-crf','18',
                  '-c:a','aac','-movflags','+faststart',str(partial)])
             media_check(partial,media,b-a)
             products.append({'start':a,'end':b,'path':str(target),'partial':str(partial)})

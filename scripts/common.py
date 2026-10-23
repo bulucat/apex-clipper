@@ -34,7 +34,8 @@ def probe(path):
     if duration <= 0 or fps <= 0:
         raise ValueError("Invalid video duration/frame rate")
     return {"width": v["width"], "height": v["height"], "fps": fps,
-            "duration": duration, "audio": any(s["codec_type"] == "audio" for s in data["streams"])}
+            "duration": duration, "audio": any(s["codec_type"] == "audio" for s in data["streams"]),
+            "audio_tracks": sum(s["codec_type"] == "audio" for s in data["streams"])}
 
 
 def identity(path):
@@ -100,7 +101,9 @@ def media_check(path, source, duration):
         raise ValueError("Output frame rate differs from source")
     if actual["audio"] != source["audio"]:
         raise ValueError("Output audio stream presence differs from source")
+    if "audio_tracks" in source and actual["audio_tracks"] != source["audio_tracks"]:
+        raise ValueError("Output audio track count differs from source")
     if abs(actual["duration"] - duration) > max(.15, 2 / source["fps"]):
         raise ValueError(f"Unexpected duration: {actual['duration']} vs {duration}")
-    run([binary("ffmpeg"), "-v", "error", "-xerror", "-i", str(path), "-f", "null", "-"])
+    run([binary("ffmpeg"), "-v", "error", "-xerror", "-i", str(path), "-map", "0:v:0", "-map", "0:a?", "-f", "null", "-"])
     return actual

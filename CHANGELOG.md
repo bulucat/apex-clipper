@@ -1,3 +1,11 @@
+# 2.7.1
+
+- Journal visual commits so interrupts/process exits cannot mark a page reviewed while losing its candidate queue.
+- Keep a reusable task card and workdir when visual review pauses.
+- Preserve all OBS audio tracks in strict clips, compilations and marked excerpts; validate/decode every audio stream and invalidate old encoding caches.
+- Count omitted expected fields as evaluation failures, including fields labelled unknown/null.
+- Align supplemental source-image IDs with match/event answer schemas so detail evidence can actually be submitted.
+
 # 2.7.0
 
 - Fix HUD corrections retaining omitted old counters/view labels and incorrect pre-scan status reporting.

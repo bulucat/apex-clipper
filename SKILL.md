@@ -6,7 +6,7 @@ description: >
   支持OBS精彩标记；程序逐项调度审核，保留原画幅与声音，精选击倒每段实际伤害至少150。
 license: MIT
 metadata:
-  version: "2.7.0"
+  version: "2.7.1"
   language: "zh-CN primary, banner terms in zh-TW and EN"
 ---
 

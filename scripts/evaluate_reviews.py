@@ -42,7 +42,10 @@ def evaluate(labels_path,answers_path,output):
             else:
                 tolerance=label.get('tolerance',{})
                 for field,expected in label['expected'].items():
-                    actual=answer['result'].get(field)
+                    if field not in answer['result']:
+                        errors.append('missing_'+field)
+                        continue
+                    actual=answer['result'][field]
                     tol=tolerance.get(field,0)
                     if type(tol) not in (int,float) or not math.isfinite(tol) or tol<0:raise ValueError('Invalid label tolerance')
                     numeric=type(expected) in (int,float) and type(actual) in (int,float)
